@@ -1,6 +1,6 @@
-// let arr = [1, [1,2], [1,2,3]]
+let arr = [1, [1,2], [1,2,3]]
 // 1 es6 =》 flat
-// console.log(arr.flat());  // [1, 1, 2, 1, 2, 3]
+console.log(arr.flat());  // [1, 1, 2, 1, 2, 3]
 // 2 递归(for,reduce)
 // function flat(arr){
 //   let result = result || []
