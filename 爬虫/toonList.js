@@ -3,12 +3,12 @@ const iPhone = puppeteer.devices['iPhone 6'];
 const utils = require('./utils/utils')
 
 //跳转获取page和browser对象
-async function pup(url,browser) {
+async function pup(url, browser) {
 
-  if(!browser){
-     browser = await puppeteer.launch({
-      // executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-      // headless: false,
+  if (!browser) {
+    browser = await puppeteer.launch({
+      executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
+      headless: false,
       timeout: 0
     });
   }
@@ -27,22 +27,24 @@ async function getBookList() {
       `https://www.bttoon.com` + x.getAttribute('href') //获取书籍详情页链接
     )
   )
+
   let bookNames = await page.$$eval('#classify_container > li > a.txtA', (el) =>
-    el.map((x) => x.innerText)
+    el.map((x) =>  x.innerText)
   )
   utils.mkdirSync(`./images`); // 存放目录
   await page.close()
   bookNames = [...bookNames]
   List = [...List]
   for (let i = 0; i < List.length; i++) {
-    utils.mkdirSync(`./images/${bookNames[i]}`); // 存放目录
-    await getBookInfo(List[i],bookNames[i],browser);
+    let bookName = utils.stripScript(bookNames[i])
+    utils.mkdirSync(`./images/${bookName}`); // 存放目录
+    await getBookInfo(List[i], bookNames[i], browser);
   }
 }
 
-async function getBookInfo(url,bookName,oldBrowser) {
-  console.log('书籍详情页获取书籍章节信息')
-  let {page, browser} = await pup(url,oldBrowser)
+async function getBookInfo(url, bookName, oldBrowser) {
+  console.log(bookName+'详情页获取书籍章节信息')
+  let {page, browser} = await pup(url, oldBrowser)
   await page.click('#list > ul.Drama> li.add')
   await page.goBack({timeout: 0})
   await page.click('#list > ul.Drama> li.add')
@@ -61,17 +63,16 @@ async function getBookInfo(url,bookName,oldBrowser) {
   await page.close();
   console.log(names, List)
   for (let i = 0; i < List.length; i++) {
-    let chapter =  names[i].substring(0,4)
+    let chapter = utils.stripScript(names[i])
     utils.mkdirSync(`./images/${bookName}/${chapter}`); // 存放目录
-    await netbian(1, List[i], chapter,bookName,browser);
+     await netbian(1, List[i], chapter, bookName, browser);
   }
 }
+let temp
+async function netbian(i, url, chapter, bookName, oldBrowser) {
 
-async function netbian(i,url,chapter,bookName,oldBrowser) {
-  console.log('下载图片')
-  let temp
-  console.log(i,chapter,'888888888888888888')
-  let {page, browser} = await pup(`${url}/${i}`,oldBrowser)
+  console.log(i, chapter, '888888888888888888')
+  let {page, browser} = await pup(`${url}/${i}`, oldBrowser)
   let images = await page.$$eval(".charpetBox > img", (el) =>//图片节点，API可查看官方介绍
     el.map((x) => {
       return x.getAttribute("data-original")//获取图片的src地址
@@ -79,13 +80,14 @@ async function netbian(i,url,chapter,bookName,oldBrowser) {
   );
   await page.close();
   for (let m of images) {
-    await utils.downloadImg(m, `./images/${bookName}/${chapter}/` + new Date().getTime()+ ".jpg");
+    await utils.downloadImg(m, `./images/${bookName}/${chapter}/` + new Date().getTime() + ".jpg");
   }
   temp = temp || []
+  console.log(temp,images)
   console.log((JSON.stringify(temp) !== JSON.stringify(images)))
-  if(JSON.stringify(temp) !== JSON.stringify(images)){
+  if (JSON.stringify(temp) !== JSON.stringify(images)) {
     temp = images
-    await netbian(++i,url,chapter,bookName)
+    await netbian(++i, url, chapter, bookName,browser)
   }
 }
 
