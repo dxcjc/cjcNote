@@ -69,5 +69,6 @@ mkdirSync('./images/秘密教学/'+stripScript('第1话-门缝传\n出呻吟声�
 module.exports={
   readAll,
   mkdirSync,
-  downloadImg,stripScript
+  downloadImg,
+  stripScript
 }

@@ -8,7 +8,7 @@ async function pup(url, browser) {
   if (!browser) {
     browser = await puppeteer.launch({
       executablePath: "C:\\Program Files\\Google\\Chrome\\Application\\chrome.exe",
-      headless: false,
+      // headless: false,
       timeout: 0
     });
   }
@@ -31,13 +31,13 @@ async function getBookList() {
   let bookNames = await page.$$eval('#classify_container > li > a.txtA', (el) =>
     el.map((x) =>  x.innerText)
   )
-  utils.mkdirSync(`./images`); // 存放目录
+  // utils.mkdirSync(`./images`); // 存放目录
   await page.close()
   bookNames = [...bookNames]
   List = [...List]
   for (let i = 0; i < List.length; i++) {
     let bookName = utils.stripScript(bookNames[i])
-    utils.mkdirSync(`./images/${bookName}`); // 存放目录
+    // utils.mkdirSync(`./images/${bookName}`); // 存放目录
     await getBookInfo(List[i], bookNames[i], browser);
   }
 }
@@ -64,12 +64,12 @@ async function getBookInfo(url, bookName, oldBrowser) {
   console.log(names, List)
   for (let i = 0; i < List.length; i++) {
     let chapter = utils.stripScript(names[i])
-    utils.mkdirSync(`./images/${bookName}/${chapter}`); // 存放目录
-     await netbian(1, List[i], chapter, bookName, browser);
+    // utils.mkdirSync(`./images/${bookName}/${chapter}`); // 存放目录
+     await netbian(1, List[i], chapter, bookName, browser,[]);
   }
 }
-let temp
-async function netbian(i, url, chapter, bookName, oldBrowser) {
+
+async function netbian(i, url, chapter, bookName, oldBrowser,temp) {
 
   console.log(i, chapter, '888888888888888888')
   let {page, browser} = await pup(`${url}/${i}`, oldBrowser)
@@ -79,15 +79,15 @@ async function netbian(i, url, chapter, bookName, oldBrowser) {
     })
   );
   await page.close();
-  for (let m of images) {
-    await utils.downloadImg(m, `./images/${bookName}/${chapter}/` + new Date().getTime() + ".jpg");
-  }
-  temp = temp || []
+  // for (let m of images) {
+  //   await utils.downloadImg(m, `./images/${bookName}/${chapter}/` + new Date().getTime() + ".jpg");
+  // }
+
   console.log(temp,images)
   console.log((JSON.stringify(temp) !== JSON.stringify(images)))
   if (JSON.stringify(temp) !== JSON.stringify(images)) {
     temp = images
-    await netbian(++i, url, chapter, bookName,browser)
+    await netbian(++i, url, chapter, bookName,browser,temp)
   }
 }
 

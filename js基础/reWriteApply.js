@@ -11,4 +11,4 @@ function a(args){
 }
 obj={
 }
-a.CjcApply(obj,['adadadadass'])
+a.CjcApply(obj,['adana'])

@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!--
+  css:
+  CSS3 定义了两种类型的渐变（gradients）：
+线性渐变（Linear Gradients）- 向下/向上/向左/向右/对角方向
+径向渐变（Radial Gradients）- 由它们的中心定义
+
+
+js: 如何排查页面中CPU占用高的情况
+setTimeout 与两次now date相减情况
+
+
+软技能： 如何实现记录用户的操作轨迹并还原？
+前端埋点，事件流数据库
+-->
+  <meta charset="UTF-8">
+  <title>Title</title>
+  <style>
+    body{
+      width: 100vw;
+      height: 100vh;
+    }
+    .color {
+      width: 100vw;
+      height: 300px;
+      background-image: linear-gradient(-45deg,black,white);
+    }
+  </style>
+</head>
+<body>
+<div class="color">
+  <label for="a">级别</label><select name="a" id="a">
+  <option value="1">1</option>
+  <option value="2">2</option>
+  <option value="3">3</option>
+  <option value="4">4</option>
+</select>
+</div>
+
+
+</body>
+<script>
+  let data = []
+  let t
+  function pulse() {
+    t && data.push(Date.now() - t)
+    t = Date.now()
+    setTimeout(pulse, 1000)
+    console.log(data);
+  }
+
+  pulse()
+</script>
+</html>
