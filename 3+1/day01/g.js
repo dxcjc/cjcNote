@@ -1,3 +1,11 @@
+/*
+ * @Author: your name
+ * @Date: 2021-03-13 15:16:17
+ * @LastEditTime: 2021-04-07 10:48:36
+ * @LastEditors: Please set LastEditors
+ * @Description: In User Settings Edit
+ * @FilePath: \note\3+1\day01\g.js
+ */
 // 不使用任何内建的哈希表库设计一个哈希集合（HashSet）。
 //
 // 实现 MyHashSet 类：
